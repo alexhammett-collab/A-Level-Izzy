@@ -40,14 +40,21 @@ Please create a structured revision plan and study material for me that includes
 Please tailor everything to the UK A-level ${courseName} specification and make sure the content is accurate, exam-relevant, and easy to follow. Use bullet points and headers to keep it scannable.`;
 }
 
-export function getModelUrl(model: AIModel): string {
+export function getModelUrl(model: AIModel, prompt?: string): string {
+  const encoded = prompt ? encodeURIComponent(prompt) : "";
   switch (model) {
     case "claude":
-      return "https://claude.ai/new";
+      return prompt
+        ? `https://claude.ai/new?q=${encoded}`
+        : "https://claude.ai/new";
     case "gemini":
-      return "https://gemini.google.com/";
+      return prompt
+        ? `https://gemini.google.com/app?q=${encoded}`
+        : "https://gemini.google.com/";
     case "chatgpt":
-      return "https://chat.openai.com/";
+      return prompt
+        ? `https://chatgpt.com/?q=${encoded}`
+        : "https://chatgpt.com/";
   }
 }
 

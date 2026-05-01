@@ -75,6 +75,13 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleOpenInModel = async () => {
+    await navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    window.open(getModelUrl(selectedModel, prompt), "_blank");
+  };
+
   const canGoNext = () => {
     switch (currentStep) {
       case 1:
@@ -408,28 +415,38 @@ export default function Home() {
               </pre>
             </div>
 
-            {/* Open in AI link */}
+            {/* Action buttons */}
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <button
-                onClick={handleCopy}
+                onClick={handleOpenInModel}
                 className={`flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-white transition-all duration-200 bg-gradient-to-r ${getModelColor(
                   selectedModel
                 )} hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]`}
               >
-                <Copy className="w-5 h-5" />
-                {copied ? "Copied!" : "Copy Prompt"}
+                <ExternalLink className="w-5 h-5" />
+                Open in{" "}
+                {aiModels.find((m) => m.id === selectedModel)?.name}
               </button>
-              <a
-                href={getModelUrl(selectedModel)}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={handleCopy}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold border-2 border-slate-200 text-slate-700 hover:bg-slate-50 transition-all duration-200"
               >
-                <ExternalLink className="w-5 h-5" />
-                Open{" "}
-                {aiModels.find((m) => m.id === selectedModel)?.name}
-              </a>
+                {copied ? (
+                  <>
+                    <Check className="w-5 h-5 text-emerald-500" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-5 h-5" />
+                    Copy Prompt
+                  </>
+                )}
+              </button>
             </div>
+            <p className="text-xs text-slate-400 mt-3 text-center">
+              Prompt is also copied to your clipboard as a backup
+            </p>
           </div>
         )}
       </main>
